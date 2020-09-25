@@ -1,34 +1,32 @@
 const CustomError = require("../extensions/custom-error");
 
-module.exports = function transform(arr) {
-    throw new CustomError('Not implemented');
-    if (Array.isArray(arr) == false) {
-        throw Error;
-    }
-    else if (arr == []) {
-        return [];
-    }
-    for (let i = 0; i < arr.length; i++) {
-        if (typeof(arr[i]) == 'string' && typeof(arr[0]) =='string' ) {
-            arr.splice(0,1);
+module.exports =
+    function transform(arr) {
+        if (!Array.isArray(arr)) throw Error;
+        let finalArr = [];
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] == '--double-next') {
+                if (i + 1 == arr.length) break;
+                finalArr.push(arr[i + 1]);
+                continue;
+            }
+            else if (arr[i] == '--discard-next') {
+                if (i + 1 == arr.length) break;
+                i++;
+                continue;
+            }
+            else if (arr[i] == '--double-prev') {
+                if (i - 1 < 0) continue;
+                finalArr.push(arr[i - 1]);
+                continue;
+            }
+            else if (arr[i] == '--discard-prev') {
+                if (i - 1 < 0) continue;
+                finalArr.pop();
+                continue;
+            }
+            else finalArr.push(arr[i]);
         }
-        else if (typeof(arr[i]) == 'string' && typeof(arr[arr.length-1]) =='string' ){
-            arr.splice(i,1);
-        }
-        else if (arr[i] == '--discard-next') {
-            arr.splice(i,2)
-        }
-    
-    else if (arr[i] == '--discard-prev') {
-         arr.splice(i-1, 2) 
-    }
 
-   else if (arr[i] == '--double-next') {
-        arr[i] = arr[i+1];
-    }
-    else if (arr[i] == '--double-prev') {
-        arr[i]=  arr[i-1];
-    }
-    }
-    return arr;
-};
+        return finalArr;
+    };
