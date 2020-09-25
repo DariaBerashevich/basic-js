@@ -1,5 +1,3 @@
-const CustomError = require("../extensions/custom-error");
-
 module.exports = function repeater(str, options) {
     if (options.hasOwnProperty('separator') == false &&  options.hasOwnProperty('additionSeparator') == false) {
  let rep = (str + "+").repeat(options.repeatTimes - 1);
