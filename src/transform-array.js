@@ -1,30 +1,32 @@
-module.exports =
-    function transform(arr) {
-        if (!Array.isArray(arr)) throw Error;
-        let finalArr = [];
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i] == '--double-next') {
-                if (i + 1 == arr.length) break;
-                finalArr.push(arr[i + 1]);
-                continue;
-            }
-            else if (arr[i] == '--discard-next') {
-                if (i + 1 == arr.length) break;
-                i++;
-                continue;
-            }
-            else if (arr[i] == '--double-prev') {
-                if (i - 1 < 0) continue;
-                finalArr.push(arr[i - 1]);
-                continue;
-            }
-            else if (arr[i] == '--discard-prev') {
-                if (i - 1 < 0) continue;
-                finalArr.pop();
-                continue;
-            }
-            else finalArr.push(arr[i]);
-        }
+module.exports = function transform(arr) {
+  if (!Array.isArray(arr)) throw new Error();
 
-        return finalArr;
-    };
+  return arr.reduce((result, element, i) => {
+    switch(element) {
+      case '--discard-next':
+      case '--discard-prev':
+      case '--double-next':
+      case '--double-prev':
+        return result;
+    }
+
+    if (arr[i - 1] === '--discard-next') {
+      return result;
+    }
+
+    (arr[i-1] === '--double-next')
+      ? result.push(element, element)
+      : result.push(element);
+
+    switch(arr[i+1]) {
+      case '--double-prev':
+        result.push(element);
+        break;
+      case '--discard-prev':
+        result.splice(result.length-1,1);
+        break;
+    }
+
+    return result;
+  }, []);
+};
