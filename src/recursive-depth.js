@@ -1,5 +1,3 @@
-const CustomError = require("../extensions/custom-error");
-
 let a = 0;
 class DepthCalculator {
 
